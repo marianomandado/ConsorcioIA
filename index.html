@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidad de Consorcios</title>
+</head>
+<body>
+    <h1>Bienvenido a la Comunidad de Consorcios</h1>
+    <p>Comparte tus experiencias y sube tus expensas para análisis.</p>
+
+    <form action="/upload-expenses" method="post" enctype="multipart/form-data">
+        <label for="expensas">Selecciona tu archivo de expensas:</label>
+        <input type="file" name="expensas" id="expensas" required>
+        <br><br>
+        <input type="submit" value="Subir Expensas">
+    </form>
+</body>
+</html>
