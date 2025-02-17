@@ -2,9 +2,11 @@ const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
-
 const app = express();
 const port = process.env.PORT || 10000;
+
+// Servir archivos estáticos desde la carpeta 'public'
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Configuración de almacenamiento de archivos
 const storage = multer.diskStorage({
