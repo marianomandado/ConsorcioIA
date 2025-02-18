@@ -8,6 +8,18 @@ const port = process.env.PORT || 10000;
 // Servir archivos estáticos desde la carpeta 'public'
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.post('/api/expensas', async (req, res) => {
+  const { propietario, unidad, gasto, descripcion } = req.body;
+
+  if (!propietario || !unidad || !gasto || !descripcion) {
+      return res.status(400).json({ message: "Todos los campos son obligatorios" });
+  }
+
+  console.log('Datos recibidos:', req.body);
+  res.status(200).json({ message: 'Expensas recibidas correctamente' });
+});
+
+
 // Configuración de almacenamiento de archivos
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
