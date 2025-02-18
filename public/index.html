@@ -1,11 +1,51 @@
 <!DOCTYPE html>
-<script>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consorcio IA - Registro de Gastos</title>
+  <link rel="stylesheet" href="style.css"> <!-- Si tienes un archivo de estilos -->
+</head>
+<body>
+  <h1>Formulario de Registro de Gastos</h1>
+
+  <!-- Formulario para registrar gastos -->
+  <form id="formularioExpensas">
+    <div>
+      <label for="nombre">Nombre del Gasto:</label>
+      <input type="text" id="nombre" name="nombre" required>
+    </div>
+    <div>
+      <label for="categoria">Categoría:</label>
+      <input type="text" id="categoria" name="categoria" required>
+    </div>
+    <div>
+      <label for="monto">Monto:</label>
+      <input type="number" id="monto" name="monto" required>
+    </div>
+    <div>
+      <label for="fecha">Fecha:</label>
+      <input type="date" id="fecha" name="fecha" required>
+    </div>
+    <button type="submit">Registrar Gasto</button>
+  </form>
+
+  <!-- Mensaje que mostrará el resultado del registro -->
+  <div id="mensaje"></div>
+
+  <h2>Lista de Gastos Registrados</h2>
+  <ul id="gastos-lista"></ul>
+
+  <!-- Script para manejar el formulario y mostrar los gastos -->
+  <script>
+    // Event listener para manejar el envío del formulario de expensas
     document.getElementById('formularioExpensas').addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
   
+      // Enviar los datos al servidor
       const response = await fetch('/api/expensas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -14,24 +54,32 @@
   
       const result = await response.json();
       alert(result.message);
+      cargarGastos();  // Recargar los gastos luego de agregar uno nuevo
     });
-  </script>
-  
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comunidad de Consorcios</title>
-</head>
-<body>
-    <h1>Bienvenido a la Comunidad </h1>
-    <p>Comparte tus experiencias y sube tus expensas para análisis.</p>
 
-    <form action="/upload-expenses" method="post" enctype="multipart/form-data">
-        <label for="expensas">Selecciona tu archivo de expensas:</label>
-        <input type="file" name="expensas" id="expensas" required>
-        <br><br>
-        <input type="submit" value="Subir Expensas">
-    </form>
+    // Llamada para obtener los gastos desde el servidor (si ya tienes configurado un endpoint)
+    async function cargarGastos() {
+      try {
+        const response = await fetch('/api/expensas');
+        const gastos = await response.json();
+
+        // Limpiar la lista antes de agregar los nuevos gastos
+        listaGastos.innerHTML = '';
+
+        // Agregar los gastos al listado
+        gastos.forEach(gasto => {
+          const li = document.createElement('li');
+          li.textContent = `${gasto.nombre} - ${gasto.categoria} - $${gasto.monto} - ${gasto.fecha}`;
+          listaGastos.appendChild(li);
+        });
+      } catch (error) {
+        console.error('Error al cargar los gastos:', error);
+      }
+    }
+
+    // Llamar a la función para cargar los gastos al cargar la página
+    cargarGastos();
+  </script>
 </body>
 </html>
+

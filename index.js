@@ -4,6 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 const port = process.env.PORT || 10000;
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 // Servir archivos estáticos desde la carpeta 'public'
 app.use(express.static(path.join(__dirname, 'public')));
@@ -19,6 +21,9 @@ app.post('/api/expensas', async (req, res) => {
   res.status(200).json({ message: 'Expensas recibidas correctamente' });
 });
 
+// Middleware para parsear JSON y datos de formularios
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configuración de almacenamiento de archivos
 const storage = multer.diskStorage({
@@ -48,8 +53,20 @@ app.post('/upload-expenses', upload.single('expensas'), (req, res) => {
   res.send('Expensa subida con éxito');
 });
 
+// Servir archivos estáticos
+app.use(express.static('public'));
+
+// Conexión a MongoDB
+mongoose.connect('mongodb://127.0.0.1:27017/consorcioIA', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log('🟢 Conexión a MongoDB exitosa'))
+.catch(err => console.error('🔴 Error al conectar con MongoDB:', err));
+
+
+
 // Iniciar servidor
 app.listen(port, () => {
-  console.log(`Servidor escuchando en el puerto ${port}`);
+    console.log(`🚀 Servidor escuchando en http://localhost:${port}`);
 });
-
